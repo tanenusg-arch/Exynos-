@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0">
+    <meta name="theme-color" content="#050505">
+    <meta name="description" content="Exynos Digital Service — Next-Gen API Topup Gateway. Instant Razer Gold credits via Telegram automation. Operating out of Ethiopia, going live in 2026.">
+    <meta name="keywords" content="Exynos, Razer Gold, topup, Telegram bot, API, gaming credits, Ethiopia">
+    <meta name="author" content="Exynos Digital Service">
+    <meta property="og:title" content="Exynos Digital Service | Next-Gen API Topup Gateway">
+    <meta property="og:description" content="Instant Razer Gold credits via proprietary Telegram API routing. Zero-latency fulfillment.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23050505'/%3E%3Ctext x='50' y='62' font-family='Arial' font-size='32' font-weight='800' fill='%2310b981' text-anchor='middle'%3EE%3C/text%3E%3C/svg%3E">
+    <title>Exynos Digital Service | Next-Gen API Topup Gateway</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Lexend:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+
+        :root {
+            --emerald: #10b981;
+            --emerald-dark: #065f46;
+            --emerald-light: #d1fae5;
+            --emerald-mid: #6ee7b7;
+            --red: #ef4444;
+            --red-glow: rgba(239, 68, 68, 0.25);
+            --bg: #050505;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            background: var(--bg);
+            background-image:
+                radial-gradient(at 0% 0%, hsla(158, 82%, 5%, 1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(160, 100%, 10%, 1) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(140, 50%, 5%, 1) 0, transparent 50%);
+            background-attachment: fixed;
+            color: #fafafa;
+            font-family: 'Lexend', system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        .font-syne { font-family: 'Syne', system-ui, sans-serif; }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #10b981, #d1fae5, #059669);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
+            animation: textGradient 4s linear infinite;
+        }
+        @keyframes textGradient { to { background-position: 200% center; } }
+
+        .btn-premium {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #065f46 0%, #10b981 100%);
+            color: #000;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+        }
+
+        /* ===== NAV — sized for phone screenshot ===== */
+        .nav-wrap {
+            position: fixed;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 24px);
+            max-width: 480px;
+            z-index: 100;
+        }
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 8px 8px 16px;
+            border-radius: 9999px;
+            gap: 8px;
+        }
+
+        /* ===== LAYOUT ===== */
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 18px;
+            max-width: 100%;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding-top: 96px;
+            padding-bottom: 40px;
+        }
+
+        .badge-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px;
+            border-radius: 9999px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            background: rgba(16, 185, 129, 0.04);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 700;
+            color: var(--emerald-mid);
+            margin-bottom: 24px;
+        }
+
+        .hero-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            line-height: 1.02;
+            margin: 0 0 22px 0;
+            font-size: 46px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-sub {
+            color: #9ca3af;
+            font-size: 15px;
+            font-weight: 300;
+            line-height: 1.55;
+            margin: 0 0 28px 0;
+            max-width: 100%;
+        }
+
+        /* RED dev notice */
+        .dev-notice {
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            padding: 16px 18px;
+            border-radius: 18px;
+            margin-bottom: 28px;
+            box-shadow: 0 0 24px var(--red-glow);
+        }
+        .dev-notice h4 {
+            color: var(--red);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 800;
+        }
+        .dev-notice p {
+            color: #fecaca;
+            font-size: 13px;
+            line-height: 1.55;
+            margin: 0;
+        }
+
+        .btn-cta {
+            padding: 14px 26px;
+            border-radius: 14px;
+            font-size: 15px;
+            gap: 10px;
+        }
+
+        /* ===== SECTION ===== */
+        .section { margin-top: 64px; }
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            text-align: center;
+            font-size: 22px;
+            margin: 0 0 28px 0;
+        }
+        .section-underline {
+            width: 60px;
+            height: 3px;
+            background: var(--emerald);
+            margin: 12px auto 0;
+            border-radius: 9999px;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            padding: 22px 18px;
+            border-radius: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .card-icon {
+            font-size: 26px;
+            color: var(--emerald);
+            margin-bottom: 14px;
+        }
+        .card-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 0 0 6px 0;
+        }
+        .card-text {
+            color: #6b7280;
+            font-size: 13px;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            margin: 0;
+        }
+
+        .feature-card {
+            padding: 22px 20px;
+            border-radius: 20px;
+        }
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 18px;
+            color: var(--emerald);
+        }
+
+        .glass-panel {
+            padding: 22px 20px;
+            border-radius: 22px;
+            color: #9ca3af;
+            line-height: 1.65;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            font-size: 14px;
+        }
+        .glass-panel p { margin: 0; }
+
+        .policy-block {
+            padding: 22px 20px;
+            border-radius: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            color: #9ca3af;
+            font-weight: 300;
+            line-height: 1.65;
+            font-size: 14px;
+        }
+        .policy-block h4 {
+            color: #fff;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+            font-size: 14px;
+        }
+        .policy-block p { margin: 0; }
+
+        /* ===== FOOTER ===== */
+        footer {
+            padding: 28px 0 24px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            background: rgba(0,0,0,0.4);
+            margin-top: 56px;
+        }
+        .footer-brand {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .footer-links a {
+            color: rgba(255,255,255,0.55);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer-links a:hover { color: var(--emerald); }
+
+        .footer-contact {
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 20px;
+            text-align: center;
+        }
+        .footer-contact-label {
+            font-size: 10px;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            font-weight: 600;
+            margin: 0 0 12px 0;
+        }
+        .footer-contact-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        .footer-contact-row a {
+            color: #d1d5db;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            transition: color 0.3s;
+        }
+        .footer-contact-row a:hover { color: var(--emerald); }
+        .footer-contact-row i { color: var(--emerald); font-size: 13px; }
+
+        .copyright {
+            font-size: 9px;
+            color: #4b5563;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            margin-top: 14px;
+        }
+
+        .return-btn {
+            background: transparent;
+            border: none;
+            color: var(--emerald);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            margin-top: 24px;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        /* ===== TEXT UTILS ===== */
+        .text-gray-400 { color: #9ca3af; }
+        .text-gray-500 { color: #6b7280; }
+        .text-emerald { color: var(--emerald); }
+
+        /* Pulse dot */
+        .pulse-dot { position: relative; display: inline-flex; width: 8px; height: 8px; }
+        .pulse-dot .ping {
+            position: absolute;
+            display: inline-flex;
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            background: var(--emerald);
+            opacity: 0.75;
+            animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+        .pulse-dot .core {
+            position: relative;
+            display: inline-flex;
+            border-radius: 50%;
+            width: 8px; height: 8px;
+            background: var(--emerald);
+        }
+        @keyframes ping {
+            75%, 100% { transform: scale(2); opacity: 0; }
+        }
+
+        /* Page fade */
+        .page-fade {
+            display: none;
+            opacity: 0;
+            transform: scale(0.98);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+        .page-fade.active {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MODERN NAVIGATION -->
+    <nav class="nav-wrap">
+        <div class="glass nav-inner">
+            <div style="display:flex; align-items:center; gap:6px; cursor:pointer; flex-shrink:0;" onclick="navigate('home')">
+                <span class="font-syne" style="font-weight:800; letter-spacing:-0.02em; font-size:18px;">EXY<span class="text-emerald">NOS</span></span>
+            </div>
+            <a href="https://t.me/vx_lecter" class="btn-premium" style="padding:9px 18px; border-radius:9999px; font-size:11px; letter-spacing:0.2em;">CONTACT</a>
+        </div>
+    </nav>
+
+    <!-- HOME PAGE -->
+    <main id="home" class="page-fade active">
+        <div class="container hero">
+            <div class="badge-live">
+                <span class="pulse-dot">
+                    <span class="ping"></span>
+                    <span class="core"></span>
+                </span>
+                <span>Live API Handshake Active</span>
+            </div>
+            <h1 class="hero-title">
+                THE ART OF <span class="gradient-text">INSTANT</span> LOAD.
+            </h1>
+            <p class="hero-sub">
+                Exynos Digital Service utilizes proprietary API routing to deliver Razer Gold credits through a highly intuitive Telegram interface. Experience zero-latency fulfillment.
+            </p>
+
+            <div class="dev-notice">
+                <h4><i class="fas fa-tools"></i> Development Roadmap</h4>
+                <p>
+                    The Exynos ecosystem is in the late-stage development phase. Automated bot features are undergoing final API security audits before going live in 2026.
+                </p>
+            </div>
+
+            <a href="https://t.me/vx_lecter" class="btn-premium btn-cta">
+                Contact Admin
+                <i class="fas fa-arrow-right"></i>
+            </a>
+
+            <!-- ABOUT US SECTION -->
+            <div class="section">
+                <h2 class="section-title">About <span class="text-emerald">Exynos</span></h2>
+                <div class="section-underline"></div>
+                <div class="glass glass-panel" style="margin-top:28px;">
+                    <p>
+                        Exynos Digital Service was founded with a single mission: to eliminate the friction between gamers and their digital currency needs. Operating out of Ethiopia, we recognized the growing demand for instant, reliable, and secure top-up services in the regional and global gaming markets.
+                    </p>
+                    <p>
+                        Unlike traditional web storefronts that suffer from slow loading times and complex checkout processes, Exynos leverages the speed of <strong>Telegram Automation</strong>. By integrating directly with the <strong>Razer Gold Merchant API</strong>, we ensure that every transaction is processed through authorized, legal channels, providing our users with peace of mind and lightning-fast results.
+                    </p>
+                    <p>
+                        Our team consists of security enthusiasts and developers dedicated to creating a "one-click" ecosystem where your game credits are just a message away.
+                    </p>
+                </div>
+            </div>
+
+            <!-- API Workflow -->
+            <div class="section" style="display:flex; flex-direction:column; gap:16px;">
+                <div class="glass feature-card">
+                    <div class="feature-icon"><i class="fab fa-telegram"></i></div>
+                    <h3 class="font-syne" style="font-size:17px; font-weight:700; margin:0 0 8px 0;">Secure Messaging</h3>
+                    <p style="color:#6b7280; font-size:13px; line-height:1.55; margin:0;">Our Telegram integration acts as a high-security shell, ensuring every command is encrypted via Telegram's MTProto 2.0.</p>
+                </div>
+                <div class="glass feature-card">
+                    <div class="feature-icon"><i class="fas fa-layer-group"></i></div>
+                    <h3 class="font-syne" style="font-size:17px; font-weight:700; margin:0 0 8px 0;">Direct API Mapping</h3>
+                    <p style="color:#6b7280; font-size:13px; line-height:1.55; margin:0;">By connecting directly to the Razer Gold Merchant API, we bypass middle-men, offering you the most competitive rates and instant delivery.</p>
+                </div>
+                <div class="glass feature-card">
+                    <div class="feature-icon"><i class="fas fa-shield-virus"></i></div>
+                    <h3 class="font-syne" style="font-size:17px; font-weight:700; margin:0 0 8px 0;">Fraud Mitigation</h3>
+                    <p style="color:#6b7280; font-size:13px; line-height:1.55; margin:0;">Proprietary AI filters analyze transaction patterns in real-time to protect our API wallet and our customers from unauthorized usage.</p>
+                </div>
+            </div>
+
+            <!-- CONTACT SECTION -->
+            <div class="section" style="display:flex; flex-direction:column; gap:14px;">
+                <h2 class="section-title">Get In <span class="text-emerald">Touch</span></h2>
+                <div class="section-underline"></div>
+                <div style="margin-top:20px; display:flex; flex-direction:column; gap:14px;">
+                    <a href="mailto:tanenusg@gmail.com" class="glass card" style="border:1px solid rgba(16,185,129,0.1);">
+                        <i class="fas fa-envelope card-icon"></i>
+                        <h4 class="card-title">Email Us</h4>
+                        <p class="card-text">tanenusg@gmail.com</p>
+                    </a>
+                    <a href="tel:+251909259439" class="glass card" style="border:1px solid rgba(16,185,129,0.1);">
+                        <i class="fas fa-phone card-icon"></i>
+                        <h4 class="card-title">Call Us</h4>
+                        <p class="card-text">+251 909259439</p>
+                    </a>
+                    <a href="https://t.me/vx_lecter" target="_blank" rel="noopener" class="glass card" style="border:1px solid rgba(16,185,129,0.1);">
+                        <i class="fab fa-telegram card-icon"></i>
+                        <h4 class="card-title">Telegram</h4>
+                        <p class="card-text">@vx_lecter</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- PRIVACY POLICY CONTENT -->
+    <main id="privacy" class="page-fade">
+        <div class="container" style="padding-top:96px; padding-bottom:40px;">
+            <h2 class="font-syne" style="font-weight:800; font-size:32px; margin:0 0 24px 0; letter-spacing:-0.02em;">DATA <span class="text-emerald">PRIVACY</span></h2>
+            <div class="glass policy-block">
+                <section>
+                    <h4>1. Information Collection</h4>
+                    <p>We only collect the minimum amount of data required to fulfill your order. This includes your Telegram User ID, your specific Game ID, and transaction references. We do not collect names, physical addresses, or financial account passwords.</p>
+                </section>
+                <section>
+                    <h4>2. Data Security & Encryption</h4>
+                    <p>All data transmitted between our server and the Razer Gold API is encrypted using 256-bit SSL/TLS protocols. Access to our internal logs is restricted to authorized administrative personnel only.</p>
+                </section>
+                <section>
+                    <h4>3. Data Retention Policy</h4>
+                    <p>Transaction logs are kept for a period of 60 days to assist in customer support and dispute resolution. After this period, Game IDs and specific transaction links are automatically scrubbed from our active databases.</p>
+                </section>
+                <section>
+                    <h4>4. User Rights</h4>
+                    <p>Users have the right to request a complete purge of their interaction history with our bot at any time. To do so, please contact us at tanenusg@gmail.com.</p>
+                </section>
+            </div>
+            <button onclick="navigate('home')" class="return-btn"><i class="fas fa-arrow-left" style="margin-right:8px;"></i> Return to Terminal</button>
+        </div>
+    </main>
+
+    <!-- TERMS OF SERVICE CONTENT -->
+    <main id="terms" class="page-fade">
+        <div class="container" style="padding-top:96px; padding-bottom:40px;">
+            <h2 class="font-syne" style="font-weight:800; font-size:32px; margin:0 0 24px 0; letter-spacing:-0.02em;">SERVICE <span class="text-emerald">TERMS</span></h2>
+            <div class="glass policy-block">
+                <section>
+                    <h4>1. Acceptance of Service</h4>
+                    <p>By interacting with the Exynos bot, you agree that you are at least 18 years of age or have explicit parental consent. You understand that our service acts as a digital bridge for Razer Gold products.</p>
+                </section>
+                <section>
+                    <h4>2. Refund & Finality</h4>
+                    <p>Due to the nature of digital goods and instant API fulfillment, all sales are final. No refunds will be issued once the API has successfully injected credits into the provided Game ID.</p>
+                </section>
+                <section>
+                    <h4>3. Forbidden Activities</h4>
+                    <p>Any attempt to exploit the bot, use stolen payment methods, or reverse-engineer the API calls will result in an immediate and permanent ban. We cooperate with relevant authorities in cases of financial fraud.</p>
+                </section>
+                <section>
+                    <h4>4. Limitation of Liability</h4>
+                    <p>Exynos is not responsible for credits delivered to an incorrect Game ID provided by the user. Please double-check your account details before confirming any transaction.</p>
+                </section>
+                <section>
+                    <h4>5. Governing Law</h4>
+                    <p>These terms are governed by the laws of Ethiopia. Any disputes arising from the use of this service shall be handled in accordance with local e-commerce regulations.</p>
+                </section>
+            </div>
+            <button onclick="navigate('home')" class="return-btn"><i class="fas fa-arrow-left" style="margin-right:8px;"></i> Return to Terminal</button>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="footer-brand font-syne">
+                EXYNOS <span class="text-emerald">DIGITAL SERVICE</span> <span class="text-emerald">2026</span>
+            </div>
+            <div class="footer-links">
+                <a href="#" onclick="navigate('privacy')">Privacy</a>
+                <a href="#" onclick="navigate('terms')">Terms</a>
+                <a href="mailto:tanenusg@gmail.com">Email</a>
+                <a href="tel:+251909259439">Phone</a>
+                <a href="https://t.me/vx_lecter">Telegram</a>
+            </div>
+            <div class="footer-contact">
+                <p class="footer-contact-label">Contact Information</p>
+                <div class="footer-contact-row">
+                    <a href="mailto:tanenusg@gmail.com"><i class="fas fa-envelope"></i> tanenusg@gmail.com</a>
+                    <a href="tel:+251909259439"><i class="fas fa-phone"></i> +251 909259439</a>
+                    <a href="https://t.me/vx_lecter" target="_blank" rel="noopener"><i class="fab fa-telegram"></i> @vx_lecter</a>
+                </div>
+                <p class="copyright">© 2026 Exynos Digital Service. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function navigate(pageId) {
+            document.querySelectorAll('.page-fade').forEach(page => {
+                page.classList.remove('active');
+            });
+            setTimeout(() => {
+                document.getElementById(pageId).classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 50);
+        }
+    </script>
+</body>
+</html>

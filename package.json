@@ -1,0 +1,20 @@
+{
+  "name": "exynos-digital-service",
+  "version": "1.0.0",
+  "description": "Exynos Digital Service — Next-Gen API Topup Gateway landing page",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Static site — no build step needed'",
+    "start": "vercel dev"
+  },
+  "keywords": [
+    "exynos",
+    "razergold",
+    "topup",
+    "telegram-bot",
+    "api"
+  ],
+  "author": "Exynos Digital Service",
+  "license": "MIT"
+}
